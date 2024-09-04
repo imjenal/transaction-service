@@ -1,0 +1,558 @@
+{
+	"info": {
+		"_postman_id": "fedb9fb2-209a-4337-9934-4c29ad9bb692",
+		"name": "pismo",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "11886189",
+		"_collection_link": "https://backedn.postman.co/workspace/184f8083-83fe-4ae1-a240-23d70cb12aad/collection/11886189-fedb9fb2-209a-4337-9934-4c29ad9bb692?action=share&source=collection_link&creator=11886189"
+	},
+	"item": [
+		{
+			"name": "accounts",
+			"item": [
+				{
+					"name": "Get Account Details",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url_v1}}/accounts/:accountID",
+							"host": [
+								"{{base_url_v1}}"
+							],
+							"path": [
+								"accounts",
+								":accountID"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							],
+							"variable": [
+								{
+									"key": "accountID",
+									"value": "115be6d7-6d9a-4391-b3ee-1d753ac7d6"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "404 - Account Not Found",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url_v1}}/accounts/:accountID",
+									"host": [
+										"{{base_url_v1}}"
+									],
+									"path": [
+										"accounts",
+										":accountID"
+									],
+									"query": [
+										{
+											"key": "",
+											"value": null,
+											"disabled": true
+										}
+									],
+									"variable": [
+										{
+											"key": "accountID",
+											"value": "e5ff50d3-0230-4928-88a5-cacc53765584"
+										}
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": "{\n    \"data\": null,\n    \"error\": {\n        \"code\": 2001,\n        \"message\": \"ACCOUNT_NOT_FOUND\",\n        \"data\": null\n    }\n}"
+						},
+						{
+							"name": "200 OK- Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url_v1}}/accounts/:accountID",
+									"host": [
+										"{{base_url_v1}}"
+									],
+									"path": [
+										"accounts",
+										":accountID"
+									],
+									"query": [
+										{
+											"key": "",
+											"value": null,
+											"disabled": true
+										}
+									],
+									"variable": [
+										{
+											"key": "accountID",
+											"value": "e5ff50d3-0230-4928-88a5-cacc53765584"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": "{\n    \"data\": {\n        \"uuid\": \"0e5be6d7-6d9a-4391-b3ee-1d753ac7d63a\",\n        \"serial_id\": 3,\n        \"document_number\": \"DOC1234561\",\n        \"current_balance\": 123.1,\n        \"user_id\": \"207e876b-41c4-4f75-bb85-655213982aca\",\n        \"created_at\": \"2024-09-04T15:01:25.747837+05:30\",\n        \"updated_at\": \"2024-09-04T15:01:25.747837+05:30\"\n    },\n    \"error\": null\n}"
+						},
+						{
+							"name": "400 - Invalid accountID",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url_v1}}/accounts/:accountID",
+									"host": [
+										"{{base_url_v1}}"
+									],
+									"path": [
+										"accounts",
+										":accountID"
+									],
+									"query": [
+										{
+											"key": "",
+											"value": null,
+											"disabled": true
+										}
+									],
+									"variable": [
+										{
+											"key": "accountID",
+											"value": "115be6d7-6d9a-4391-b3ee-1d753ac7d611"
+										}
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": "{\n    \"data\": null,\n    \"error\": {\n        \"code\": 1007,\n        \"message\": \"Invalid path param\",\n        \"how_to_fix\": \"send correct path param\",\n        \"data\": {\n            \"value\": \"115be6d7-6d9a-4391-b3ee-1d753ac7d6\",\n            \"variable\": \"accountID\"\n        }\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Create Account",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"document_number\": \"DOC11112\",\n    \"current_balance\": 123.1,\n    \"user_id\": \"88e0e837-e7f2-47b1-a08c-3af267c03078\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url_v1}}/accounts",
+							"host": [
+								"{{base_url_v1}}"
+							],
+							"path": [
+								"accounts"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "200 OK - Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"document_number\": \"DOC11111\",\n    \"current_balance\": 123.1,\n    \"user_id\": \"88e0e837-e7f2-47b1-a08c-3af267c03088\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url_v1}}/accounts",
+									"host": [
+										"{{base_url_v1}}"
+									],
+									"path": [
+										"accounts"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": "{\n    \"data\": {\n        \"uuid\": \"3689b0ea-92a2-4c2a-b6ba-7ffd7e4de314\",\n        \"serial_id\": 3,\n        \"document_number\": \"DOC11111\",\n        \"current_balance\": 123.1,\n        \"user_id\": \"88e0e837-e7f2-47b1-a08c-3af267c03088\",\n        \"created_at\": \"2024-09-04T18:57:15.044593+05:30\",\n        \"updated_at\": \"2024-09-04T18:57:15.044593+05:30\"\n    },\n    \"error\": null\n}"
+						},
+						{
+							"name": "500 - User ID not found",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"document_number\": \"DOC11111\",\n    \"current_balance\": 123.1,\n    \"user_id\": \"88e0e837-e7f2-47b1-a08c-3af267c0308\"",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url_v1}}/accounts",
+									"host": [
+										"{{base_url_v1}}"
+									],
+									"path": [
+										"accounts"
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": "{\n    \"data\": null,\n    \"error\": {\n        \"code\": 4001,\n        \"message\": \"USER_NOT_FOUND\",\n        \"data\": null\n    }\n}"
+						},
+						{
+							"name": "422 - Invalid userid",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"document_number\": \"DOC11111\",\n    \"current_balance\": 123.1,\n    \"user_id\": \"88e0e837-e7f2-47b1-a08c-3af267c0308\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url_v1}}/accounts",
+									"host": [
+										"{{base_url_v1}}"
+									],
+									"path": [
+										"accounts"
+									]
+								}
+							},
+							"status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+							"code": 422,
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": "{\n    \"data\": null,\n    \"error\": {\n        \"code\": 1006,\n        \"message\": \"Invalid data received for request\",\n        \"how_to_fix\": \"Please send data in correct format\",\n        \"data\": [\n            \"user_id\"\n        ]\n    }\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "transactions",
+			"item": [
+				{
+					"name": "Get Transaction Details",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url_v1}}/transactions/:transactionID",
+							"host": [
+								"{{base_url_v1}}"
+							],
+							"path": [
+								"transactions",
+								":transactionID"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							],
+							"variable": [
+								{
+									"key": "transactionID",
+									"value": "9e66af08-b26f-46e1-bc36-d85628fcae"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "200 OK - Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url_v1}}/transactions/:transactionID",
+									"host": [
+										"{{base_url_v1}}"
+									],
+									"path": [
+										"transactions",
+										":transactionID"
+									],
+									"query": [
+										{
+											"key": "",
+											"value": null,
+											"disabled": true
+										}
+									],
+									"variable": [
+										{
+											"key": "transactionID",
+											"value": "9e66af08-b26f-46e1-bc36-d85628fcaeb7"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": "{\n    \"data\": {\n        \"uuid\": \"9e66af08-b26f-46e1-bc36-d85628fcaeb7\",\n        \"serial_id\": 1,\n        \"account_id\": \"005be6d7-6d9a-4391-b3ee-1d753ac7d600\",\n        \"amount\": 100.5,\n        \"operation_type_id\": 1,\n        \"event_date\": \"2024-09-04T18:54:55.223887+05:30\",\n        \"updated_at\": \"2024-09-04T18:54:55.223887+05:30\"\n    },\n    \"error\": null\n}"
+						},
+						{
+							"name": "404- Transaction Not Found",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url_v1}}/transactions/:transactionID",
+									"host": [
+										"{{base_url_v1}}"
+									],
+									"path": [
+										"transactions",
+										":transactionID"
+									],
+									"query": [
+										{
+											"key": "",
+											"value": null,
+											"disabled": true
+										}
+									],
+									"variable": [
+										{
+											"key": "transactionID",
+											"value": "9e66af08-b26f-46e1-bc36-d85628fcaeb1"
+										}
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": "{\n    \"data\": null,\n    \"error\": {\n        \"code\": 3001,\n        \"message\": \"TRANSACTION_NOT_FOUND\",\n        \"data\": null\n    }\n}"
+						},
+						{
+							"name": "400- Invalid transactionID",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url_v1}}/transactions/:transactionID",
+									"host": [
+										"{{base_url_v1}}"
+									],
+									"path": [
+										"transactions",
+										":transactionID"
+									],
+									"query": [
+										{
+											"key": "",
+											"value": null,
+											"disabled": true
+										}
+									],
+									"variable": [
+										{
+											"key": "transactionID",
+											"value": "9e66af08-b26f-46e1-bc36-d85628fcae"
+										}
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": "{\n    \"data\": null,\n    \"error\": {\n        \"code\": 1007,\n        \"message\": \"Invalid path param\",\n        \"how_to_fix\": \"send correct path param\",\n        \"data\": {\n            \"value\": \"9e66af08-b26f-46e1-bc36-d85628fcae\",\n            \"variable\": \"transactionID\"\n        }\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Create Transaction",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"account_id\": \"115be6d7-6d9a-4391-b3ee-1d753ac7d611\",\n    \"operation_type_id\": 4,\n    \"amount\": 10\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url_v1}}/transactions",
+							"host": [
+								"{{base_url_v1}}"
+							],
+							"path": [
+								"transactions"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "404- Account Not Found",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"account_id\": \"115be6d7-6d9a-4391-b3ee-1d753ac7d611\",\n    \"operation_type_id\": 4,\n    \"amount\": 121.5\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url_v1}}/transactions",
+									"host": [
+										"{{base_url_v1}}"
+									],
+									"path": [
+										"transactions"
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": "{\n    \"data\": null,\n    \"error\": {\n        \"code\": 2001,\n        \"message\": \"ACCOUNT_NOT_FOUND\",\n        \"data\": null\n    }\n}"
+						},
+						{
+							"name": "200 OK - Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"account_id\": \"115be6d7-6d9a-4391-b3ee-1d753ac7d611\",\n    \"operation_type_id\": 4,\n    \"amount\": 121.5\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url_v1}}/transactions",
+									"host": [
+										"{{base_url_v1}}"
+									],
+									"path": [
+										"transactions"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": "{\n    \"data\": {\n        \"uuid\": \"1649d99f-69ef-4b49-b6bd-e619d2bb31b7\",\n        \"serial_id\": 7,\n        \"account_id\": \"115be6d7-6d9a-4391-b3ee-1d753ac7d611\",\n        \"amount\": 400.58,\n        \"operation_type_id\": 4,\n        \"event_date\": \"2024-09-04T20:38:32.769557+05:30\",\n        \"updated_at\": \"2024-09-04T20:38:32.769557+05:30\"\n    },\n    \"error\": null\n}"
+						},
+						{
+							"name": "404 - Operation Type Not Found",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"account_id\": \"115be6d7-6d9a-4391-b3ee-1d753ac7d611\",\n    \"operation_type_id\": 4,\n    \"amount\": 121.5\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url_v1}}/transactions",
+									"host": [
+										"{{base_url_v1}}"
+									],
+									"path": [
+										"transactions"
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": "{\n    \"data\": null,\n    \"error\": {\n        \"code\": 5001,\n        \"message\": \"OPERATION_TYPE_NOT_FOUND\",\n        \"data\": null\n    }\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Health Check",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/health",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"health"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
