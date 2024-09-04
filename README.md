@@ -61,7 +61,7 @@ To see the list of available targets, run ``make help``
 
 ### Local Development
 
-Head over to [docs/LOCAL_DEV.md](docs/LOCAL_DEV.md) for detailed instructions to setup local development.
+Head over to [docs/LOCAL_DEV.md](docs/local_dev.md) for detailed instructions to setup local development.
 
 ## Architecture Overview
 
