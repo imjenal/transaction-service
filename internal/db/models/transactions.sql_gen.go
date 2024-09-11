@@ -7,23 +7,41 @@ package models
 
 import (
 	"context"
+	"time"
 )
 
 const createTransaction = `-- name: CreateTransaction :one
-INSERT INTO public.transactions (account_id, amount, operation_type_id, event_date)
-VALUES ($1, $2, $3, NOW())
-RETURNING uuid, serial_id, account_id, amount, operation_type_id, event_date, updated_at
+INSERT INTO public.transactions (account_id, amount, operation_type_id, balance, event_date)
+VALUES ($1, $2, $3, $4, NOW())
+RETURNING uuid, serial_id, account_id, amount, operation_type_id, event_date, balance, updated_at
 `
 
 type CreateTransactionParams struct {
 	AccountID       string  `db:"account_id" json:"account_id"`
 	Amount          float64 `db:"amount" json:"amount"`
 	OperationTypeID int64   `db:"operation_type_id" json:"operation_type_id"`
+	Balance         float64 `db:"balance" json:"balance"`
 }
 
-func (q *Queries) CreateTransaction(ctx context.Context, arg CreateTransactionParams) (*Transaction, error) {
-	row := q.db.QueryRow(ctx, createTransaction, arg.AccountID, arg.Amount, arg.OperationTypeID)
-	var i Transaction
+type CreateTransactionRow struct {
+	Uuid            string    `db:"uuid" json:"uuid"`
+	SerialID        int64     `db:"serial_id" json:"serial_id"`
+	AccountID       string    `db:"account_id" json:"account_id"`
+	Amount          float64   `db:"amount" json:"amount"`
+	OperationTypeID int64     `db:"operation_type_id" json:"operation_type_id"`
+	EventDate       time.Time `db:"event_date" json:"event_date"`
+	Balance         float64   `db:"balance" json:"balance"`
+	UpdatedAt       time.Time `db:"updated_at" json:"updated_at"`
+}
+
+func (q *Queries) CreateTransaction(ctx context.Context, arg CreateTransactionParams) (*CreateTransactionRow, error) {
+	row := q.db.QueryRow(ctx, createTransaction,
+		arg.AccountID,
+		arg.Amount,
+		arg.OperationTypeID,
+		arg.Balance,
+	)
+	var i CreateTransactionRow
 	err := row.Scan(
 		&i.Uuid,
 		&i.SerialID,
@@ -31,20 +49,74 @@ func (q *Queries) CreateTransaction(ctx context.Context, arg CreateTransactionPa
 		&i.Amount,
 		&i.OperationTypeID,
 		&i.EventDate,
+		&i.Balance,
 		&i.UpdatedAt,
 	)
 	return &i, err
 }
 
+const getNegativeBalanceTransactionsByAccountID = `-- name: GetNegativeBalanceTransactionsByAccountID :many
+SELECT uuid, account_id, operation_type_id, amount, balance, event_date FROM public.transactions
+WHERE  account_id = $1 AND balance < 0
+ORDER BY event_date
+`
+
+type GetNegativeBalanceTransactionsByAccountIDRow struct {
+	Uuid            string    `db:"uuid" json:"uuid"`
+	AccountID       string    `db:"account_id" json:"account_id"`
+	OperationTypeID int64     `db:"operation_type_id" json:"operation_type_id"`
+	Amount          float64   `db:"amount" json:"amount"`
+	Balance         float64   `db:"balance" json:"balance"`
+	EventDate       time.Time `db:"event_date" json:"event_date"`
+}
+
+func (q *Queries) GetNegativeBalanceTransactionsByAccountID(ctx context.Context, accountID string) ([]*GetNegativeBalanceTransactionsByAccountIDRow, error) {
+	rows, err := q.db.Query(ctx, getNegativeBalanceTransactionsByAccountID, accountID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []*GetNegativeBalanceTransactionsByAccountIDRow
+	for rows.Next() {
+		var i GetNegativeBalanceTransactionsByAccountIDRow
+		if err := rows.Scan(
+			&i.Uuid,
+			&i.AccountID,
+			&i.OperationTypeID,
+			&i.Amount,
+			&i.Balance,
+			&i.EventDate,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, &i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const getTransactionDetailsByTransactionId = `-- name: GetTransactionDetailsByTransactionId :one
-SELECT uuid, serial_id, account_id, amount, operation_type_id, event_date, updated_at
+SELECT uuid, serial_id, account_id, amount, operation_type_id, event_date, balance, updated_at
 FROM public.transactions
 WHERE uuid = $1
 `
 
-func (q *Queries) GetTransactionDetailsByTransactionId(ctx context.Context, uuid string) (*Transaction, error) {
+type GetTransactionDetailsByTransactionIdRow struct {
+	Uuid            string    `db:"uuid" json:"uuid"`
+	SerialID        int64     `db:"serial_id" json:"serial_id"`
+	AccountID       string    `db:"account_id" json:"account_id"`
+	Amount          float64   `db:"amount" json:"amount"`
+	OperationTypeID int64     `db:"operation_type_id" json:"operation_type_id"`
+	EventDate       time.Time `db:"event_date" json:"event_date"`
+	Balance         float64   `db:"balance" json:"balance"`
+	UpdatedAt       time.Time `db:"updated_at" json:"updated_at"`
+}
+
+func (q *Queries) GetTransactionDetailsByTransactionId(ctx context.Context, uuid string) (*GetTransactionDetailsByTransactionIdRow, error) {
 	row := q.db.QueryRow(ctx, getTransactionDetailsByTransactionId, uuid)
-	var i Transaction
+	var i GetTransactionDetailsByTransactionIdRow
 	err := row.Scan(
 		&i.Uuid,
 		&i.SerialID,
@@ -52,7 +124,22 @@ func (q *Queries) GetTransactionDetailsByTransactionId(ctx context.Context, uuid
 		&i.Amount,
 		&i.OperationTypeID,
 		&i.EventDate,
+		&i.Balance,
 		&i.UpdatedAt,
 	)
 	return &i, err
+}
+
+const updateTransactionBalances = `-- name: UpdateTransactionBalances :exec
+UPDATE public.transactions SET balance = $2 WHERE uuid = $1
+`
+
+type UpdateTransactionBalancesParams struct {
+	Uuid    string  `db:"uuid" json:"uuid"`
+	Balance float64 `db:"balance" json:"balance"`
+}
+
+func (q *Queries) UpdateTransactionBalances(ctx context.Context, arg UpdateTransactionBalancesParams) error {
+	_, err := q.db.Exec(ctx, updateTransactionBalances, arg.Uuid, arg.Balance)
+	return err
 }

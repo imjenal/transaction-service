@@ -11,10 +11,12 @@ import (
 type Querier interface {
 	AccountExists(ctx context.Context, uuid string) (bool, error)
 	CreateAccount(ctx context.Context, arg CreateAccountParams) (*Account, error)
-	CreateTransaction(ctx context.Context, arg CreateTransactionParams) (*Transaction, error)
+	CreateTransaction(ctx context.Context, arg CreateTransactionParams) (*CreateTransactionRow, error)
 	GetAccountDetailsByUUID(ctx context.Context, uuid string) (*Account, error)
+	GetNegativeBalanceTransactionsByAccountID(ctx context.Context, accountID string) ([]*GetNegativeBalanceTransactionsByAccountIDRow, error)
 	GetOperationTypeAmountBehavior(ctx context.Context, serialID int64) (AmountBehavior, error)
-	GetTransactionDetailsByTransactionId(ctx context.Context, uuid string) (*Transaction, error)
+	GetTransactionDetailsByTransactionId(ctx context.Context, uuid string) (*GetTransactionDetailsByTransactionIdRow, error)
+	UpdateTransactionBalances(ctx context.Context, arg UpdateTransactionBalancesParams) error
 	UserExists(ctx context.Context, uuid string) (bool, error)
 }
 

@@ -66,10 +66,10 @@ func (mr *MockQuerierMockRecorder) CreateAccount(ctx, arg interface{}) *gomock.C
 }
 
 // CreateTransaction mocks base method.
-func (m *MockQuerier) CreateTransaction(ctx context.Context, arg models.CreateTransactionParams) (*models.Transaction, error) {
+func (m *MockQuerier) CreateTransaction(ctx context.Context, arg models.CreateTransactionParams) (*models.CreateTransactionRow, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateTransaction", ctx, arg)
-	ret0, _ := ret[0].(*models.Transaction)
+	ret0, _ := ret[0].(*models.CreateTransactionRow)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -95,6 +95,21 @@ func (mr *MockQuerierMockRecorder) GetAccountDetailsByUUID(ctx, uuid interface{}
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAccountDetailsByUUID", reflect.TypeOf((*MockQuerier)(nil).GetAccountDetailsByUUID), ctx, uuid)
 }
 
+// GetNegativeBalanceTransactionsByAccountID mocks base method.
+func (m *MockQuerier) GetNegativeBalanceTransactionsByAccountID(ctx context.Context, accountID string) ([]*models.GetNegativeBalanceTransactionsByAccountIDRow, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetNegativeBalanceTransactionsByAccountID", ctx, accountID)
+	ret0, _ := ret[0].([]*models.GetNegativeBalanceTransactionsByAccountIDRow)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetNegativeBalanceTransactionsByAccountID indicates an expected call of GetNegativeBalanceTransactionsByAccountID.
+func (mr *MockQuerierMockRecorder) GetNegativeBalanceTransactionsByAccountID(ctx, accountID interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetNegativeBalanceTransactionsByAccountID", reflect.TypeOf((*MockQuerier)(nil).GetNegativeBalanceTransactionsByAccountID), ctx, accountID)
+}
+
 // GetOperationTypeAmountBehavior mocks base method.
 func (m *MockQuerier) GetOperationTypeAmountBehavior(ctx context.Context, serialID int64) (models.AmountBehavior, error) {
 	m.ctrl.T.Helper()
@@ -111,10 +126,10 @@ func (mr *MockQuerierMockRecorder) GetOperationTypeAmountBehavior(ctx, serialID 
 }
 
 // GetTransactionDetailsByTransactionId mocks base method.
-func (m *MockQuerier) GetTransactionDetailsByTransactionId(ctx context.Context, uuid string) (*models.Transaction, error) {
+func (m *MockQuerier) GetTransactionDetailsByTransactionId(ctx context.Context, uuid string) (*models.GetTransactionDetailsByTransactionIdRow, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetTransactionDetailsByTransactionId", ctx, uuid)
-	ret0, _ := ret[0].(*models.Transaction)
+	ret0, _ := ret[0].(*models.GetTransactionDetailsByTransactionIdRow)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -123,6 +138,20 @@ func (m *MockQuerier) GetTransactionDetailsByTransactionId(ctx context.Context, 
 func (mr *MockQuerierMockRecorder) GetTransactionDetailsByTransactionId(ctx, uuid interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetTransactionDetailsByTransactionId", reflect.TypeOf((*MockQuerier)(nil).GetTransactionDetailsByTransactionId), ctx, uuid)
+}
+
+// UpdateTransactionBalances mocks base method.
+func (m *MockQuerier) UpdateTransactionBalances(ctx context.Context, arg models.UpdateTransactionBalancesParams) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdateTransactionBalances", ctx, arg)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// UpdateTransactionBalances indicates an expected call of UpdateTransactionBalances.
+func (mr *MockQuerierMockRecorder) UpdateTransactionBalances(ctx, arg interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateTransactionBalances", reflect.TypeOf((*MockQuerier)(nil).UpdateTransactionBalances), ctx, arg)
 }
 
 // UserExists mocks base method.

@@ -124,6 +124,7 @@ type Transaction struct {
 	OperationTypeID int64     `db:"operation_type_id" json:"operation_type_id"`
 	EventDate       time.Time `db:"event_date" json:"event_date"`
 	UpdatedAt       time.Time `db:"updated_at" json:"updated_at"`
+	Balance         float64   `db:"balance" json:"balance"`
 }
 
 type User struct {

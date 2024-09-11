@@ -38,8 +38,75 @@ func (h *Handler) createTransaction() http.HandlerFunc {
 
 		requestBody.Amount = adjustAmountBasedOnOperationTypeAmountBehavior(amountBehavior, requestBody.Amount)
 
-		h.createAndRespondTransaction(ctx, w, requestBody)
+		if amountBehavior == models.AmountBehaviorPOSITIVE {
+			h.dischargeAndCreateTransaction(ctx, w, requestBody)
+		} else {
+			h.createAndRespondTransaction(ctx, w, requestBody)
+		}
 	}
+}
+
+func (h *Handler) dischargeAndCreateTransaction(ctx context.Context, w http.ResponseWriter, requestBody *CreateTransactionRequestData) {
+	transactions, err := h.repository.getNegativeBalanceTransactionsByAccountID(ctx, requestBody.AccountId)
+	if err != nil {
+		log.Printf("dischargeAndCreateTransaction: failed to fetch txns: %v", err)
+		h.writer.Internal(w, &response.APIError{
+			Code:    response.DefaultErrorCode,
+			Message: "Failed to fetch transactions for discharge",
+		})
+		return
+	}
+
+	dischargedTransactions, remainingBalance := h.performDischarge(transactions, requestBody.Amount)
+
+	if err := h.repository.updateTransactionBalances(ctx, dischargedTransactions); err != nil {
+		log.Printf("dischargeAndCreateTransaction: failed to update transaction balances: %v", err)
+		h.writer.Internal(w, &response.APIError{
+			Code:    response.DefaultErrorCode,
+			Message: "Failed to fetch update transaction balances",
+		})
+		return
+	}
+
+	//requestBody.Amount = remainingBalance
+	newTxn, err := h.repository.createTransaction(ctx, models.CreateTransactionParams{
+		AccountID:       requestBody.AccountId,
+		OperationTypeID: requestBody.OperationTypeId,
+		Amount:          requestBody.Amount,
+		Balance:         remainingBalance,
+	})
+	if err != nil {
+		log.Printf("dischargeAndCreateTransaction: failed to create transaction: %v", err)
+		h.writer.Internal(w, &response.APIError{
+			Code:    response.DefaultErrorCode,
+			Message: "Failed to create transaction.",
+		})
+		return
+	}
+
+	h.writer.Ok(w, newTxn)
+
+}
+
+func (h *Handler) performDischarge(transactions []*models.GetNegativeBalanceTransactionsByAccountIDRow, amount float64) ([]*models.GetNegativeBalanceTransactionsByAccountIDRow, float64) {
+	for i := range transactions {
+		if amount <= 0 {
+			break
+		}
+		if transactions[i].Balance < 0 { //only discharge txns with negative balances
+			dischargeAmount := min(-transactions[i].Balance, amount)
+			transactions[i].Balance += dischargeAmount
+			amount -= dischargeAmount
+		}
+	}
+	return transactions, amount
+}
+
+func min(a, b float64) float64 {
+	if a < b {
+		return a
+	}
+	return b
 }
 
 // validateAccount checks if the account exists
@@ -95,6 +162,7 @@ func (h *Handler) createAndRespondTransaction(ctx context.Context, w http.Respon
 		AccountID:       requestBody.AccountId,
 		OperationTypeID: requestBody.OperationTypeId,
 		Amount:          requestBody.Amount,
+		Balance:         requestBody.Amount,
 	})
 	if err != nil {
 		log.Printf("createTransaction: failed to create transaction: %v", err)
